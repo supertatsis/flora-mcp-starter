@@ -28,9 +28,9 @@ Check it worked: *"List my FLORA workspaces. Don't generate anything."*
 | [03 · Batch of 5 (+1)](recipes/03-batch-from-list.md) | six consistent PDP shots, fired at once | Nano Banana 2.1 | $0.312 | 25 s for all six |
 | [04 · Refine loop](recipes/04-refine-loop.md) | fix a named defect, stop when right | Flux 2 Klein 4B + Haiku judge | $0.010 | 2 rounds |
 | [02 · Photo → video](recipes/02-product-photo-to-video.md) | 5-second clip from the first image | Kling 2.5 Turbo Pro | $0.294 | 88 s |
-| [05 · Mockup deck](recipes/05-mockup-deck.md) | ad creative placed out-of-home + social | — | not yet measured | — |
+| [05 · OOH mockups](recipes/05-mockup-deck.md) | creative placed on 4 out-of-home surfaces | Nano Banana 2.1 (i2i) | $0.208 | 20 s for all four |
 
-**Total spent for everything measured: $0.62** (the first image is one of the six in the batch; the QA judge pass on the batch cost $0.002). The free $2.50 covers all of them three times over — as long as nobody picks the $2.48 video model by accident.
+**Total spent for all five recipes: $0.83** (the first image is one of the six in the batch; the two QA judge passes cost $0.004 together). The free $2.50 covers all of them three times over — as long as nobody picks the $2.48 video model by accident.
 
 Every number above came from a real run on my account. Prices are FLORA's published per-model rates — the same in the app and over MCP. Output images are in each recipe.
 
