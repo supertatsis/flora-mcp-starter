@@ -2,7 +2,9 @@
 
 **Measured (21 Oct 2026):** Kling 2.5 Turbo Pro, 5 s, image-to-video · **$0.294** · **88 s** from submit to done. That's 5.7× the cost of the still it animated.
 
-Source: the dripper from recipe 01. Result: [watch the MP4](https://media.flora.ai/node-inputs/2026/10/21/anonymous/24da6ee1-56ab-445e-a863-e9bee4d1d622.mp4?tr=orig).
+Source still below → **[▶ watch the 5-second MP4](https://media.flora.ai/node-inputs/2026/10/21/anonymous/24da6ee1-56ab-445e-a863-e9bee4d1d622.mp4?tr=orig)** (GitHub can't embed external video, so it opens in a new tab).
+
+<img src="https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17dxrsrf9n2mzcxepkfazxnw98gq4cw-0.png" width="360" alt="Source still: coffee dripper">
 
 ## Prompt
 ```
