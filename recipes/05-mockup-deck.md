@@ -1,5 +1,7 @@
 # 05 · One ad creative → campaign mockup deck
 
+**Not yet measured** — this one costs four placement generations (~$0.21 on Nano Banana 2.1) plus resizes, and I'll add the numbers and images once run. Everything below is from the official skill.
+
 **Goal:** take a finished poster/key visual and see it in the world — four out-of-home placements, three social resizes, and a deck with the brief beside each placement. The artwork is reproduced exactly, never regenerated.
 
 ## Prompt
@@ -10,9 +12,6 @@ mock it up square-on on a gable end, a transit platform, a bus shelter and a con
 ```
 
 No artwork yet? *"Create a campaign deck of a flower"* — the skill writes the poster first (one extra generation), shows it, and only places it once you approve.
-
-## Cost shape
-Four billable placement generations (+1 if the creative is written rather than supplied). Resizes use `flora-image-resize`.
 
 ## Gotchas
 - Placements are not re-rollable individually without paying again — approve the master creative before placing.

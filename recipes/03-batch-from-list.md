@@ -1,6 +1,16 @@
-# 03 · Batch from a list or CSV (20–500 assets)
+# 03 · Batch from a list (5 products, one wait)
 
-**Law:** N items is **one** wait, not N waits. FLORA runs generations concurrently; a six-item batch fired together finishes in ~16 s vs ~150 s one-by-one (measured by the FLORA team).
+**Measured (21 Oct 2026):** 5 products + 1 hero on Nano Banana 2.1, fired in one call · **$0.312** (6 × $0.052) · **all six done 25 s after submit**. Individual runs took 16–25 s, so sequential would have been ~2 minutes.
+
+| PO-01 | WB-04 | AP-09 |
+|---|---|---|
+| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17bkmzaqtdt4xfsyxdsn6ge858gqzpn-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m174386vbe3p5959z04s9h515s8gqfv0-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m178svvhr2m7z2d1aqzb7n7jhs8gq8c4-0.png) |
+
+| CB-02 | SB-03 |
+|---|---|
+| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17br6jjkxd7spz8sezk3ec5cn8gp269-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17dd1nkbzyq3grbsemh8fq3rh8gpr97-0.png) |
+
+**Law:** N items is **one** wait, not N waits. FLORA runs generations concurrently; the serialisation is on the agent's side.
 
 ## Prompt
 ```
@@ -16,18 +26,27 @@ One consistent studio style across all five: seamless warm-grey backdrop, soft s
 Quote the total in USD first. After the run, list what failed and why.
 ```
 
-Have a CSV? Attach it and say *"one image per row, column 'description' is the subject, column 'sku' is the label"*.
+## The gotcha we paid for: SKU codes end up printed on the product
+The first run put the SKU in each prompt ("PO-01: a matte black…"). A $0.002 QA pass with an image-to-text judge (Claude Haiku 5.5, six images in one call) found:
 
-## What happens under the hood
-1. One `flora_create_generations` call with up to 20 items (bigger lists → several calls)
-2. Every `run_id` saved
-3. One `flora_list_generations` poll for the whole batch, max(15, 2 × runs) seconds apart
-4. Per-item outcome: done / failed (and whether failure is retryable)
+> 2. Matte black dripper … with an **embossed SKU code** on the base. FAIL.
+> 3. Brushed steel bottle … with a **printed SKU across the lower body**. FAIL.
+> 4. Folded linen apron **with a hang tag** carrying printed text. FAIL.
+> 5. Walnut board shot low and off-axis, darker gradient band across the bottom. FAIL.
+> 6. Stack of bowls … clean seamless backdrop. PASS.
+
+Three of five had the label rendered onto the product. **Keep SKUs in your own bookkeeping, not in the prompt** — or add "no text, no labels, no tags" to the style sentence. Lighting direction and backdrop tone were consistent across all six, so the style lock worked; only the per-item line leaked.
+
+## What happened
+1. One `flora_create_generations` call with six items (max 20 per call).
+2. Every `run_id` saved.
+3. One `flora_list_generations` poll ~20 s later → all six complete.
+4. One `i2t` judge call over all six URLs (`image_urls` array) for the QA above.
 
 ## Gotchas
-- A timed-out call may still have started runs. The agent must read history before re-firing — otherwise you pay twice.
-- Polling faster than the rule returns 429s. Not a bug; slow down.
-- Want the results tidy? *"Arrange them in a 5-column grid on the canvas"* → `flora_arrange_canvas`.
+- A timed-out call may still have started runs. Read history before re-firing or you pay twice.
+- Polling faster than max(15, 2 × runs) seconds returns 429s.
+- Want the results tidy? *"Arrange them in a grid on the canvas"* → `flora_arrange_canvas`.
 
 ---
 *Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan.*
