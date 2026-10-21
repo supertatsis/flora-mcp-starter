@@ -1,52 +1,47 @@
-# 03 · Batch from a list (5 products, one wait)
+# 03 · Five editions, one wait
 
-**Measured (21 Oct 2026):** 5 products + 1 hero on Nano Banana 2.1, fired in one call · **$0.312** (6 × $0.052) · **all six done 25 s after submit**. Individual runs took 16–25 s, so sequential would have been ~2 minutes.
+**Measured (21 Oct 2026):** 5 Spectrum editions on Nano Banana Pro image-to-image, fired in one call · **$0.90** (5 × $0.18) · **all five done 38 s after submit** (individual runs 29–38 s; sequential would have been ~3 minutes).
 
-| PO-01 | WB-04 | AP-09 |
+| SPECTRUM 01 | SPECTRUM 02 | SPECTRUM 03 |
 |---|---|---|
-| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17bkmzaqtdt4xfsyxdsn6ge858gqzpn-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m174386vbe3p5959z04s9h515s8gqfv0-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m178svvhr2m7z2d1aqzb7n7jhs8gq8c4-0.png) |
+| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17da57596tt7s6td30b3y7sfn8gqfnt-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m177hkam4zmx583p4sewrf2rdh8gpapw-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m173rqjrv3a6tejfd8rmd2ymsh8gqtm5-0.png) |
 
-| CB-02 | SB-03 |
-|---|---|
-| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17br6jjkxd7spz8sezk3ec5cn8gp269-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17dd1nkbzyq3grbsemh8fq3rh8gpr97-0.png) |
+| SPECTRUM 04 | SPECTRUM 05 | Hero (reference) |
+|---|---|---|
+| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17bg1s26d6dja6y7819psqcgn8gpdvn-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m1723m1vazkjscpwaey6sd94g98gph2b-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m1700vvqf92v4nfcvyh2bbtq258gq7re-0.png) |
+
+A $0.004 judge pass over all six: **5/5 PASS** — "composition, camera angle, can, surface, lighting and wordmark are consistent; only the liquid colour and sub-line change."
 
 **Law:** N items is **one** wait, not N waits. FLORA runs generations concurrently; the serialisation is on the agent's side.
 
-## Prompt
+## The prompt to give your agent
 ```
-Read https://raw.githubusercontent.com/florafauna-ai/flora-mcp-skills/main/skills/flora-batch-generate/SKILL.md and follow it for these products:
-
-  PO-01  matte black ceramic pour-over coffee dripper
-  WB-04  brushed steel insulated water bottle
-  AP-09  folded oatmeal linen apron
-  CB-02  rectangular walnut cutting board
-  SB-03  stack of three speckled stoneware bowls
-
-One consistent studio style across all five: seamless warm-grey backdrop, soft softbox from camera left, subtle contact shadow, 85mm, centred, no props.
-Quote the total in USD first. After the run, list what failed and why.
+Using the hero as the reference image, make five Spectrum editions as ONE batch on Nano Banana Pro (image-to-image, 2K, 4:5). Keep composition, camera, surface, lighting, can and wordmark identical; change only the liquid and its caustics:
+  01 electric cyan → deep teal
+  02 hot magenta → soft pink
+  03 acid lime → pale yellow
+  04 deep violet → ultraviolet blue
+  05 warm amber → molten orange
+Add a tiny second line under the wordmark: "SPECTRUM 0N". Quote the total in USD first; after the run, judge all five against the hero and tell me what drifted.
 ```
 
-## The gotcha we paid for: SKU codes end up printed on the product
-The first run put the SKU in each prompt ("PO-01: a matte black…"). A $0.002 QA pass with an image-to-text judge (Claude Haiku 5.5, six images in one call) found:
+## Per-item prompt (what was actually sent)
+```
+Keep the reference image's exact composition, camera, mirror-black surface, lighting, can shape, condensation and the small white 'HOLA COLA' wordmark. Change ONLY the liquid inside the can and its caustics to a single-hue edition: electric cyan to deep teal, with subtle iridescent highlights. Add a tiny second line under the wordmark in the same minimal sans: 'SPECTRUM 01'. Nothing else changes; no other text.
+```
 
-> 2. Matte black dripper … with an **embossed SKU code** on the base. FAIL.
-> 3. Brushed steel bottle … with a **printed SKU across the lower body**. FAIL.
-> 4. Folded linen apron **with a hang tag** carrying printed text. FAIL.
-> 5. Walnut board shot low and off-axis, darker gradient band across the bottom. FAIL.
-> 6. Stack of bowls … clean seamless backdrop. PASS.
+## Why this worked when my first batch didn't
+An earlier test batch (five kitchen products, text-to-image) put SKU codes at the start of each prompt — and the model printed them onto the products. Here the edition label is *meant* to be on the can, so it goes in the prompt deliberately, as the last instruction, in a defined place. The rule: **text in the prompt ends up in the picture; decide where you want it.**
 
-Three of five had the label rendered onto the product. **Keep SKUs in your own bookkeeping, not in the prompt** — or add "no text, no labels, no tags" to the style sentence. Lighting direction and backdrop tone were consistent across all six, so the style lock worked; only the per-item line leaked.
-
-## What happened
-1. One `flora_create_generations` call with six items (max 20 per call).
-2. Every `run_id` saved.
-3. One `flora_list_generations` poll ~20 s later → all six complete.
-4. One `i2t` judge call over all six URLs (`image_urls` array) for the QA above.
+## What happened under the hood
+1. One `flora_create_generations` call, five items, each with the hero's URL in `params.image_url`.
+2. Every `run_id` saved; one `flora_list_generations` poll ~40 s later.
+3. One image-to-text judge call with all six URLs in `image_urls` for the set check.
 
 ## Gotchas
-- A timed-out call may still have started runs. Read history before re-firing or you pay twice.
-- Polling faster than max(15, 2 × runs) seconds returns 429s.
-- Want the results tidy? *"Arrange them in a grid on the canvas"* → `flora_arrange_canvas`.
+- Lock the style sentence; vary only the one line per item.
+- A timed-out call may still have started runs — read history before re-firing, or you pay twice.
+- Want them tidy? *"Arrange the six in a row on the canvas"* → `flora_arrange_canvas`.
 
 ---
-*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan.*
+*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan. The whole campaign on this page fits inside it.*

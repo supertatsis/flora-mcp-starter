@@ -1,45 +1,35 @@
-# 05 · One creative → out-of-home mockups
+# 05 · Hero → out-of-home, at night
 
-**Measured (21 Oct 2026):** 4 placements on Nano Banana 2.1 image-to-image, fired at once · **$0.208** (4 × $0.052) + $0.002 QA · **all four done 20 s after submit**.
+**Measured (21 Oct 2026):** 3 placements on Nano Banana Pro image-to-image, fired at once · **$0.54** (3 × $0.18) · **all three done 35 s after submit**.
 
-Source: the dripper hero from recipe 01, passed as a canvas reference (`reference_node_ids`), not re-described.
+<img src="https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17bdr699t5hzhnvtd6annk7qn8gqsb0-0.png" width="520" alt="Glass facade screen at night">
 
-| Gable end | Bus shelter |
+| Bus shelter, rain | Metro platform |
 |---|---|
-| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m172gpqe9t4t8m1p2wrtvr2jed8gpnbq-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17b9967q0tdhws8p7p5fpz5ms8gq8n2-0.png) |
+| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m173zved4h8vezw208z3gq7wt98gp4kd-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17d6n12mtwtr9dz72smwt3h758gqkda-0.png) |
 
-| Metro platform | Construction hoarding |
-|---|---|
-| ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17b0zd8mndyr9nm289pnnm5k98gpter-0.png) | ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m171s0x2gqgpde2ek59vbhyf418gqd6b-0.png) |
+Judge pass ($0.004, same call as the batch check): **facade PASS, metro PASS, bus shelter FAIL** — "artwork cropped: floor reflection and light streaks removed, can enlarged within the frame." Two of three reproduced the hero faithfully; one re-composed it. That ratio is typical for generative placement, and it's why there are three here and not four: the fourth would have been the re-roll.
 
-## The honest result: good previews, not faithful reproductions
-A $0.002 judge pass comparing each mockup to the original:
-
-> 2 (gable end): placement correct; FAIL — fold creases and wrinkle shading overlaid on the artwork.
-> 3 (bus shelter): placement correct; FAIL — square artwork **stretched to the portrait panel**, proportions changed.
-> 4 (metro): placement correct; FAIL — stretched to landscape.
-> 5 (hoarding): placement correct; FAIL — stretched vertically, crop enlarged.
-
-So: **a generative "place this poster" prompt gets you a convincing client preview for $0.05 a placement, but it does not reproduce the artwork pixel-for-pixel.** The model re-draws it to fit the surface. If the creative has already been signed off, that's a problem.
-
-The official `flora-mockup-deck` skill exists precisely for this: it reproduces the artwork exactly (no regeneration) and uses `flora-image-resize` for the 1:1 / 4:5 / 9:16 social versions. Use the prompt below for sign-off-grade work; use the shortcut above when you need a quick "what would it look like" for a deck.
-
-## Prompt (sign-off grade)
+## The prompt to give your agent
 ```
-Here's our campaign key visual: <attach or paste a public URL>.
-Follow https://raw.githubusercontent.com/florafauna-ai/flora-mcp-skills/main/skills/flora-mockup-deck/SKILL.md :
-mock it up square-on on a gable end, a transit platform, a bus shelter and a construction hoarding, plus 1:1, 4:5 and 9:16 social resizes. Don't touch the artwork. Quote first; deliver a FLORA Deck.
+Place the hero, unaltered and uncropped, as (a) a backlit bus-shelter panel on a rain-wet street at night, (b) a large portrait screen on a minimalist glass facade at night with one passer-by for scale, (c) a poster on an empty metro platform wall. Square-on, 35mm film grain, realistic, no added text. Fire all three as one batch; quote first; then judge each against the hero and flag any that altered the artwork.
 ```
 
-## Prompt (quick preview, what we ran)
+## Per-placement prompt (facade, what was actually sent)
 ```
-Use the dripper image on the canvas as the reference. Place it exactly as-is, unaltered, as a large printed poster on (a) the gable end of a brick building, (b) a bus shelter panel, (c) a metro platform wall, (d) a construction hoarding. Square-on, daylight, realistic, no text added. Fire all four at once; quote first.
+Photograph of a large portrait digital screen on the glass facade of a minimalist modern building at night, displaying the reference image EXACTLY, unaltered and uncropped. The screen's spectral light reflects in the glass and on the wet pavement below; one silhouetted passer-by for scale; deep blue night, light haze. Square-on view from street level. Shot on 35mm film, fine grain, realistic, no added text.
+```
+
+## Preview vs sign-off
+These are **previews**: convincing for a deck, not pixel-exact. When the artwork is already approved and must not change, use the official `flora-mockup-deck` skill, which composites the artwork rather than regenerating it, and `flora-image-resize` for 1:1 / 4:5 / 9:16 social cuts:
+```
+Follow https://raw.githubusercontent.com/florafauna-ai/flora-mcp-skills/main/skills/flora-mockup-deck/SKILL.md with the hero. Don't touch the artwork. Quote first; deliver a FLORA Deck.
 ```
 
 ## Gotchas
-- "Exactly as-is, unaltered" in the prompt is not a guarantee; the judge caught distortion in all four.
-- Placements are not re-rollable individually without paying again — approve the master creative before placing.
-- Need a PDF instead of a FLORA Deck? Ask for the annotated A4 PDF delivery.
+- "EXACTLY, unaltered and uncropped" in caps helps but is not a guarantee — judge every placement.
+- Night + wet surfaces hide the seams generative placement leaves in daylight. If a daytime mockup looks fake, that's often why.
+- Placements aren't re-rollable individually without paying again; approve the hero before placing.
 
 ---
-*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan.*
+*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan. The whole campaign on this page fits inside it.*

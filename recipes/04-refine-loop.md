@@ -1,31 +1,32 @@
-# 04 · Refine until it's right (without burning money)
+# 04 · Refine until right — and know when to stop
 
-**Measured (21 Oct 2026):** goal met in **2 rounds** · **$0.010 total** (2 × $0.004 Flux 2 Klein 4B + 2 × $0.001 Claude Haiku 5.5 judge) · 8 s per generation, 6–70 s per judge call (the second judge call queued).
+**Measured (21 Oct 2026):** 2 rounds on Nano Banana Pro · **$0.362** (2 × $0.18 + 2 × $0.001 judge) · stopped by the rule, not by the budget.
 
-**Law:** re-running the same prompt is not a refinement. Name the defect, change the prompt, stop when the defect stops moving.
-
-## Goal
-> A single white ceramic mug on a plain black surface. Handle points RIGHT. Top-down bird's-eye view. No other objects, no text.
+**Law:** re-running the same prompt is not a refinement. Name the defect, change the prompt, and **stop when the same defect survives a real prompt change** — that's a model limitation, not a bad roll.
 
 ## What happened
-| Round | Prompt | Judge verdict | Cost |
+| Round | Change | Judge verdict | Cost |
 |---|---|---|---|
-| 1 | "a white ceramic mug on a black surface" | **fail** — "camera angle is side/eye-level, not top-down"; "black textured fabric with lint specks rather than a plain surface" | $0.005 |
-| 2 | round 1 + judge's fix: "…plain seamless matte black surface, handle pointing right. Straight top-down bird's-eye view looking directly down. No fabric texture, no lint…" | **pass** — 0 defects | $0.005 |
+| 1 | hero prompt (recipe 01) | **fail** — caustics "streak to the frame edges"; wordmark "bold rounded, not thin geometric"; also flagged condensation and bubbles *that I'd asked for* | $0.181 |
+| 2 | "set wordmark in a THIN light geometric sans; confine caustics to a pool in front of the can; nothing else changes" | **fail** — caustics "still reach the frame edges"; wordmark "not clearly thin" | $0.181 |
 
-Round 1 · ![](https://media.flora.ai/node-inputs/2026/10/21/anonymous/1abfb003-0b9e-468c-823f-1d8dd424ff4c.png) Round 2 · ![](https://media.flora.ai/node-inputs/2026/10/21/anonymous/55cd096d-1e26-40be-9097-1d64ba2861a1.png)
+Same defect twice → stop. I kept **round 1** as the hero: the wide caustic is the best thing in the frame, and the judge was enforcing a goal I'd written too tightly.
 
-## Prompt
+Round 1 · ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m1700vvqf92v4nfcvyh2bbtq258gq7re-0.png) Round 2 · ![](https://media.flora.ai/node-inputs/2026/10/21/px7ewxkd7hftt3sq4x5a3jztkn7v9ptc/gen-m17c8fsv9zq30h1zmbr5365s1s8gqeqc-0.png)
+
+## Two lessons that cost $0.36
+1. **The judge grades the goal you wrote, not the picture you wanted.** It failed condensation because my goal text didn't mention condensation. Write the goal to include everything you *do* want, or the loop will try to remove it.
+2. **Stop on a repeated defect.** The official `flora-refine-loop` skill says exactly this and it held: round 3 would have been $0.18 for a differently-wrong image.
+
+## The prompt to give your agent
 ```
-Generate a single white ceramic mug on a plain black surface. Handle pointing right, top-down bird's-eye view, no other objects.
-Then follow https://raw.githubusercontent.com/florafauna-ai/flora-mcp-skills/main/skills/flora-refine-loop/SKILL.md : judge the result against that description, name the specific defect, fix the prompt, and repeat. Max 3 rounds, quote each round.
+Judge the hero against this goal: <paste goal>. Name the single biggest defect, change only that in the prompt, re-run once on the same model, judge again. If the same defect comes back, stop and show me both rounds. Max 3 rounds; quote each.
 ```
 
-## What we learned that the official skill doesn't say
-- The official skill lists Gemini Flash judges as **0 credits**. On this account they were $0.0045–$0.05. The cheapest image-to-text model was **Claude Haiku 5.5 at $0.001** — use `flora_list_models` with `type: text` and check `estimated_cost_usd` rather than trusting a list.
-- For `i2t` models the image parameter is **`image_urls` (plural, array)**. Singular `image_url` is accepted and silently ignored — the judge then rules blind and passes everything.
-- Make the judge **describe before it rules** (`observed` field first). It caught the lint-on-fabric defect that a verdict-only prompt would have missed.
-- Tune the prompt on a $0.004 model, then run the final on the expensive one. GPT Image / Seedream Pro are 40× the price.
+## Judge details
+- Model: `i2t-claude-haiku-5-5`, **$0.001 per look**, 6–10 s. The official skill lists Gemini Flash judges as free; on this account they're $0.0045–$0.05 — check `flora_list_models` `type: text`.
+- Parameter is **`image_urls`, plural, array**. Singular is silently ignored and the judge rules blind.
+- Prompt shape: *describe first, then verdict*, JSON out, strip fences before parsing.
 
 ---
-*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan.*
+*Need a FLORA account? [Sign up free](https://refer.flora.ai/Tatiana) — referral link, $2.50 of usage included on the free plan. The whole campaign on this page fits inside it.*
